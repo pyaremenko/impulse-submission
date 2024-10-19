@@ -2,10 +2,10 @@
 pragma solidity ^0.8.15;
 
 import {BaseHook} from "v4-periphery/BaseHook.sol";
-import {Hooks} from "@uniswap/v4-core/contracts/libraries/Hooks.sol";
-import {IPoolManager} from "@uniswap/v4-core/contracts/interfaces/IPoolManager.sol";
-import {PoolId, PoolIdLibrary} from "@uniswap/v4-core/contracts/libraries/PoolId.sol";
-import {BalanceDelta} from "@uniswap/v4-core/contracts/types/BalanceDelta.sol";
+import {Hooks} from "v4-core/contracts/libraries/Hooks.sol";
+import {IPoolManager} from "v4-core/contracts/interfaces/IPoolManager.sol";
+import {PoolId, PoolIdLibrary} from "v4-core/contracts/libraries/PoolId.sol";
+import {BalanceDelta} from "v4-core/contracts/types/BalanceDelta.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
