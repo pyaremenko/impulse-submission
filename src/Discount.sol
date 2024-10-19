@@ -11,7 +11,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 
 contract DiscountNFT is ERC721Enumerable, Ownable {
     uint256 public nextTokenId;
-    mapping(uint256 => uint8) public discounts; // Discounts in percentage (e.g., 10%)
+    mapping(uint256 => uint8) public discounts;
 
     constructor() ERC721("Discount NFT", "DNFT") {}
 
@@ -37,7 +37,6 @@ contract DiscountHook is BaseHook {
         discountNFT = DiscountNFT(_discountNFT);
     }
 
-    // Function to calculate the discount based on NFTs owned by the buyer
     function calculateDiscount(address buyer) public view returns (uint8) {
         uint256 balance = discountNFT.balanceOf(buyer);
         uint8 maxDiscount = 0;
@@ -51,40 +50,30 @@ contract DiscountHook is BaseHook {
         return maxDiscount;
     }
 
-    // Hook function that applies discount before the swap
     function beforeSwap(
         address buyer,
         IPoolManager.PoolKey calldata poolKey,
         IPoolManager.SwapParams calldata swapParams
     ) external override returns (bytes4) {
-        // Calculate buyer discount based on owned NFTs
         uint8 discount = calculateDiscount(buyer);
         uint256 effectiveFee = baseFee - discount;
         uint256 fee = (swapParams.amountSpecified * effectiveFee) / 100;
 
-        // Handle fee logic (fee calculation, distribution, etc.)
-        // Store or process the fee as needed
-
         return BaseHook.beforeSwap.selector;
     }
 
-    // Hook function after the swap is completed
     function afterSwap(
         address buyer,
         IPoolManager.PoolKey calldata poolKey,
         IPoolManager.SwapParams calldata swapParams,
         BalanceDelta balanceDelta
     ) external override returns (bytes4) {
-        // Post-swap logic can be added here, like updating states or minting NFTs
-
-        // Optionally mint a new NFT with a random discount for the buyer
         uint8 newDiscount = randomDiscount();
         discountNFT.mintDiscountNFT(buyer, newDiscount);
 
         return BaseHook.afterSwap.selector;
     }
 
-    // Simple function to generate a random discount for new NFTs
     function randomDiscount() internal view returns (uint8) {
         return
             uint8(
@@ -93,7 +82,7 @@ contract DiscountHook is BaseHook {
                         abi.encodePacked(block.timestamp, block.difficulty)
                     )
                 ) % 10) + 5
-            ); // Random discount between 5% to 15%
+            );
     }
 
     function getHooksCalls() public pure override returns (Hooks.Calls memory) {
